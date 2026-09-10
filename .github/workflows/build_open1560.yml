@@ -5,7 +5,12 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: "Commit SHA to build (leave blank for the branch's latest commit)"
+        required: false
+        default: ""
 
 env:
   PREMAKE_GENERATOR: vs2022
@@ -19,6 +24,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_sha != '' && github.event.inputs.commit_sha || github.ref }}
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
@@ -26,7 +33,9 @@ jobs:
           msbuild-architecture: x86
 
       - name: Generate project files (Premake)
-        run: tools/premake5.exe ${{ env.PREMAKE_GENERATOR }}
+        run: >
+          tools/premake5.exe ${{ env.PREMAKE_GENERATOR }}
+          --MM1_GAME_DIRECTORY="${{ github.workspace }}/builds/"
 
       - name: Build
         run: >
@@ -34,12 +43,6 @@ jobs:
           /p:Configuration="${{ env.BUILD_CONFIGURATION }}"
           /p:Platform="${{ env.BUILD_PLATFORM }}"
           "build/Open1560.sln"
-
-      - name: Stage output into builds/
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Path builds -Force | Out-Null
-          Copy-Item -Path "build/output/*" -Destination "builds" -Recurse -Force
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
