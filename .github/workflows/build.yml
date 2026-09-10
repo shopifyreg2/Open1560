@@ -13,7 +13,7 @@ on:
         default: ""
 
 env:
-  PREMAKE_GENERATOR: vs2022
+  PREMAKE_GENERATOR: vs2019
   BUILD_CONFIGURATION: Final
   BUILD_PLATFORM: Win32
 
