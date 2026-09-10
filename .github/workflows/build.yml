@@ -42,6 +42,7 @@ jobs:
           msbuild /verbosity:minimal /nologo /m
           /p:Configuration="${{ env.BUILD_CONFIGURATION }}"
           /p:Platform="${{ env.BUILD_PLATFORM }}"
+          /p:DisableSpecificWarnings=4756
           "build/Open1560.sln"
 
       - name: Upload build artifact
