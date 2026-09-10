@@ -10,7 +10,7 @@ on:
       commit_sha:
         description: "Commit SHA to build (leave blank for the branch's latest commit)"
         required: false
-        default: ""
+        default: "fd5fa1af693eb343636f04fd463f82a196f05669"
 
 env:
   PREMAKE_GENERATOR: vs2022
