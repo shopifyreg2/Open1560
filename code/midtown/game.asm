@@ -11683,7 +11683,7 @@ ALIGN 16
     call ?Warningf@@YAXPBDZZ
     add esp, 4
     mov ecx, offset ?NETMGR@@3VasNetwork@@A
-    push 5
+    push 0Ah
     push 0
     push 8
     call ?Initialize@asNetwork@@QAEHHHH@Z
@@ -11885,7 +11885,7 @@ loc_40CECB:
     push ebx
     mov ecx, offset ?NETMGR@@3VasNetwork@@A
     call ?GetGameVersion@asNetwork@@QAEHH@Z
-    cmp eax, 5
+    cmp eax, 0Ah
     jz loc_40CF09
     push 1
     push ebx
@@ -12022,7 +12022,7 @@ loc_40D039:
     push esi
     mov ecx, offset ?NETMGR@@3VasNetwork@@A
     call ?GetGameVersion@asNetwork@@QAEHH@Z
-    cmp eax, 5
+    cmp eax, 0Ah
     jz loc_40D06B
     push offset asc_635990
     call ?Errorf@@YAXPBDZZ
@@ -13317,7 +13317,7 @@ ALIGN 16
     mov esi, dword ptr [ebp+8]
     push edi
     mov ebx, ecx
-    mov dword ptr [esi], 5
+    mov dword ptr [esi], 0Ah
     mov eax, dword ptr [?MMSTATE@@3UmmStatePack@@A+2Ch]
     mov edi, dword ptr [?MMSTATE@@3UmmStatePack@@A+30h]
     mov ecx, dword ptr [?MMSTATE@@3UmmStatePack@@A+64h]
