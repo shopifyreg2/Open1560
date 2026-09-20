@@ -82,6 +82,102 @@ b32 asNetwork::Initialize(i32 max_players, b32 secure, i32 game_version)
     return true;
 }
 
+namespace
+{
+    // The per-player data block exchanged through DirectPlay is 180 bytes in builds 1560/1588, but 188 bytes in 1589 (XP patch).
+    // The rest of the game still uses the 180 byte layout, so the block is converted to/from the 1589 layout here.
+    //
+    // 1560: [0, 172) common data, [172, 176) int, [176, 180) int
+    // 1589: [0, 172) common data, [172, 176) unused, [176, 180) int, [180, 184) int, [184, 188) int (always 1)
+    constexpr i32 PLAYER_DATA_SIZE_1560 = 180;
+    constexpr i32 PLAYER_DATA_SIZE_1589 = 188;
+    constexpr i32 PLAYER_DATA_COMMON_SIZE = 172;
+    constexpr i32 PLAYER_DATA_MAX_SIZE = 512;
+} // namespace
+
+i32 asNetwork::GetPlayerData(ulong id, void* data, i32 size)
+{
+    if (!dplay_)
+        return false;
+
+    HRESULT error = DP_OK;
+
+    if (size == PLAYER_DATA_SIZE_1560)
+    {
+        u8 wire[PLAYER_DATA_MAX_SIZE] {};
+        DWORD wire_size = sizeof(wire);
+
+        error = dplay_->GetPlayerData(id, wire, &wire_size, DPGET_REMOTE);
+
+        if (error == DP_OK)
+        {
+            u8* dest = static_cast<u8*>(data);
+
+            if (wire_size == static_cast<DWORD>(PLAYER_DATA_SIZE_1589))
+            {
+                std::memcpy(dest, wire, PLAYER_DATA_COMMON_SIZE);
+                std::memcpy(dest + PLAYER_DATA_COMMON_SIZE, wire + PLAYER_DATA_COMMON_SIZE + 4, 8);
+            }
+            else
+            {
+                std::memcpy(dest, wire, std::min<DWORD>(wire_size, static_cast<DWORD>(PLAYER_DATA_SIZE_1560)));
+            }
+        }
+    }
+    else
+    {
+        DWORD wire_size = static_cast<DWORD>(size);
+
+        error = dplay_->GetPlayerData(id, data, &wire_size, DPGET_REMOTE);
+    }
+
+    if (error != DP_OK)
+        Errorf("DPLAY::GetPlayerData -- error %08X", static_cast<u32>(error));
+
+    return error == DP_OK;
+}
+
+i32 asNetwork::GetEnumPlayerData(i32 index, void* data, i32 size)
+{
+    if (!dplay_)
+        return false;
+
+    const ulong id = GetPlayerID(index);
+
+    if (id == 0)
+        return false;
+
+    return GetPlayerData(id, data, size);
+}
+
+void asNetwork::SetPlayerData(ulong id, void* data, i32 size)
+{
+    if (!dplay_)
+        return;
+
+    HRESULT error = DP_OK;
+
+    if (size == PLAYER_DATA_SIZE_1560)
+    {
+        u8 wire[PLAYER_DATA_SIZE_1589] {};
+
+        std::memcpy(wire, data, PLAYER_DATA_COMMON_SIZE);
+        std::memcpy(wire + PLAYER_DATA_COMMON_SIZE + 4, static_cast<const u8*>(data) + PLAYER_DATA_COMMON_SIZE, 8);
+
+        const i32 unknown = 1;
+        std::memcpy(wire + PLAYER_DATA_COMMON_SIZE + 12, &unknown, sizeof(unknown));
+
+        error = dplay_->SetPlayerData(id, wire, sizeof(wire), DPSET_REMOTE);
+    }
+    else
+    {
+        error = dplay_->SetPlayerData(id, data, static_cast<DWORD>(size), DPSET_REMOTE);
+    }
+
+    if (error != DP_OK)
+        Errorf("DPLAY::SetPlayerData -- error %08X", static_cast<u32>(error));
+}
+
 b32 asNetwork::InitializeLobby(i32 max_players, b32 secure)
 {
     Displayf("Initializing lobby");

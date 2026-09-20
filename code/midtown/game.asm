@@ -173245,224 +173245,6 @@ loc_489D8F:
 ?GetPlayerName@asNetwork@@QAEHKPAD@Z ENDP
 
 ALIGN 16
-?SetPlayerData@asNetwork@@QAEXKPAXH@Z PROC PUBLIC
-    push ebp
-    mov ebp, esp
-    mov eax, dword ptr [ecx+2Ch]
-    push esi
-    test eax, eax
-    mov esi, -7FFFBFFBh
-    jz loc_489DC6
-    mov edx, dword ptr [ebp+10h]
-    mov ecx, dword ptr [eax]
-    push 0
-    push edx
-    mov edx, dword ptr [ebp+0Ch]
-    push edx
-    mov edx, dword ptr [ebp+8]
-    push edx
-    push eax
-    call dword ptr [ecx+74h]
-    mov esi, eax
-
-loc_489DC6:
-    cmp esi, -7788FF88h
-    jnz loc_489DDB
-    push offset asc_63D484
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489DDB:
-    cmp esi, -7788FF7Eh
-    jnz loc_489DF0
-    push offset asc_63D4B0
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489DF0:
-    cmp esi, -7788FF6Ah
-    jnz loc_489E05
-    push offset asc_63D4DC
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489E05:
-    cmp esi, -7788FFF6h
-    jnz loc_489E1A
-    push offset asc_63D508
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489E1A:
-    cmp esi, -7FF8FFA9h
-    jnz loc_489E2F
-    push offset asc_63D534
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489E2F:
-    pop esi
-    pop ebp
-    retn 0Ch
-?SetPlayerData@asNetwork@@QAEXKPAXH@Z ENDP
-
-ALIGN 16
-?GetEnumPlayerData@asNetwork@@QAEHHPAXH@Z PROC PUBLIC
-    push ebp
-    mov ebp, esp
-    mov eax, dword ptr [ebp+10h]
-    push ebx
-    push esi
-    mov ebx, dword ptr [ebp+8]
-    push edi
-    mov edi, ecx
-    mov dword ptr [ebp+10h], eax
-    mov esi, -7FFFBFFBh
-    mov eax, dword ptr [edi+2Ch]
-    test eax, eax
-    jz loc_489E7F
-    cmp ebx, dword ptr [sym_6A897C]
-    jg loc_489E7F
-    mov ecx, dword ptr [eax]
-    lea edx, [ebp+10h]
-    push 0
-    push edx
-    mov edx, dword ptr [ebp+0Ch]
-    push edx
-    mov edx, dword ptr sym_6A8648[ebx*4]
-    push edx
-    push eax
-    call dword ptr [ecx+50h]
-    mov esi, eax
-
-loc_489E7F:
-    cmp esi, -7788FFE2h
-    jnz loc_489EAD
-    mov eax, dword ptr [ebp+10h]
-    push eax
-    call ?arts_malloc@@YAPAXI@Z
-    mov ecx, dword ptr [edi+2Ch]
-    add esp, 4
-    lea esi, [ebp+10h]
-    mov edx, dword ptr [ecx]
-    push 0
-    push esi
-    push eax
-    mov eax, dword ptr sym_6A8648[ebx*4]
-    push eax
-    push ecx
-    call dword ptr [edx+50h]
-    mov esi, eax
-
-loc_489EAD:
-    cmp esi, -7788FF88h
-    jnz loc_489EC2
-    push offset asc_63D560
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489EC2:
-    cmp esi, -7788FF7Eh
-    jnz loc_489ED7
-    push offset asc_63D58C
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489ED7:
-    cmp esi, -7788FF6Ah
-    jnz loc_489EEC
-    push offset asc_63D5B8
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489EEC:
-    xor eax, eax
-    pop edi
-    test esi, esi
-    pop esi
-    pop ebx
-    setz al
-    pop ebp
-    retn 0Ch
-?GetEnumPlayerData@asNetwork@@QAEHHPAXH@Z ENDP
-
-ALIGN 16
-?GetPlayerData@asNetwork@@QAEHKPAXH@Z PROC PUBLIC
-    push ebp
-    mov ebp, esp
-    mov eax, dword ptr [ebp+10h]
-    push ebx
-    push esi
-    mov ebx, dword ptr [ebp+8]
-    push edi
-    mov edi, ecx
-    mov dword ptr [ebp+10h], eax
-    mov esi, -7FFFBFFBh
-    mov eax, dword ptr [edi+2Ch]
-    test eax, eax
-    jz loc_489F30
-    mov ecx, dword ptr [eax]
-    lea edx, [ebp+10h]
-    push 0
-    push edx
-    mov edx, dword ptr [ebp+0Ch]
-    push edx
-    push ebx
-    push eax
-    call dword ptr [ecx+50h]
-    mov esi, eax
-
-loc_489F30:
-    cmp esi, -7788FFE2h
-    jnz loc_489F57
-    mov eax, dword ptr [ebp+10h]
-    push eax
-    call ?arts_malloc@@YAPAXI@Z
-    mov ecx, dword ptr [edi+2Ch]
-    add esp, 4
-    lea esi, [ebp+10h]
-    mov edx, dword ptr [ecx]
-    push 0
-    push esi
-    push eax
-    push ebx
-    push ecx
-    call dword ptr [edx+50h]
-    mov esi, eax
-
-loc_489F57:
-    cmp esi, -7788FF88h
-    jnz loc_489F6C
-    push offset asc_63D5E4
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489F6C:
-    cmp esi, -7788FF7Eh
-    jnz loc_489F81
-    push offset asc_63D610
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489F81:
-    cmp esi, -7788FF6Ah
-    jnz loc_489F96
-    push offset asc_63D63C
-    call ?Errorf@@YAXPBDZZ
-    add esp, 4
-
-loc_489F96:
-    xor eax, eax
-    pop edi
-    test esi, esi
-    pop esi
-    pop ebx
-    setz al
-    pop ebp
-    retn 0Ch
-?GetPlayerData@asNetwork@@QAEHKPAXH@Z ENDP
-
-ALIGN 16
 ?CreateSession@asNetwork@@QAEHPAD0HPAUNETSESSION_DESC@@@Z PROC PUBLIC
     push ebp
     mov ebp, esp
@@ -482566,39 +482348,6 @@ ALIGN 4
 asc_63D464 db 'DPLAY: GetPlayerName: failure',0
 
 ALIGN 4
-asc_63D484 db 'DPLAY::GetPlayerData -- DPERR_INVALIDFLAGS',0
-
-ALIGN 4
-asc_63D4B0 db 'DPLAY::GetPlayerData -- DPERR_INVALIDOBJECT',0
-
-ALIGN 4
-asc_63D4DC db 'DPLAY::GetPlayerData -- DPERR_INVALIDPLAYER',0
-
-ALIGN 4
-asc_63D508 db 'DPLAY::GetPlayerData -- DPERR_ACCESSDENIED',0
-
-ALIGN 4
-asc_63D534 db 'DPLAY::GetPlayerData -- DPERR_INVALIDPARAMS',0
-
-ALIGN 4
-asc_63D560 db 'DPLAY::GetPlayerData -- DPERR_INVALIDFLAGS',0
-
-ALIGN 4
-asc_63D58C db 'DPLAY::GetPlayerData -- DPERR_INVALIDOBJECT',0
-
-ALIGN 4
-asc_63D5B8 db 'DPLAY::GetPlayerData -- DPERR_INVALIDPLAYER',0
-
-ALIGN 4
-asc_63D5E4 db 'DPLAY::GetPlayerData -- DPERR_INVALIDFLAGS',0
-
-ALIGN 4
-asc_63D610 db 'DPLAY::GetPlayerData -- DPERR_INVALIDOBJECT',0
-
-ALIGN 4
-asc_63D63C db 'DPLAY::GetPlayerData -- DPERR_INVALIDPLAYER',0
-
-ALIGN 4
 asc_63D740 db 'DPLAY: Open Session failed code %d.',0
 
 ALIGN 4
@@ -509204,6 +508953,7 @@ EXTERN ?GetDeviceNames@DSGlobal@@QAEPAPADXZ:PROC
 EXTERN ?GetDimensions@UIMenu@@QAEXAAM000@Z:PROC
 EXTERN ?GetEntity@mmBangerInstance@@UAEPAVmmPhysEntity@@XZ:PROC
 EXTERN ?GetEntity@mmInstance@@UAEPAVmmPhysEntity@@XZ:PROC
+EXTERN ?GetEnumPlayerData@asNetwork@@QAEHHPAXH@Z:PROC
 EXTERN ?GetEnv@agiTexSorter@@SAPAVagiPolySet@@PAVagiTexDef@@HH@Z:PROC
 EXTERN ?GetErrorMessage@MixerCTL@@AAEPBDK@Z:PROC
 EXTERN ?GetFloat@Tokenizer@@QAEMXZ:PROC
@@ -509229,6 +508979,7 @@ EXTERN ?GetPixel@agiColorModelRGB888@@UAEIPAVagiSurfaceDesc@@HH@Z:PROC
 EXTERN ?GetPixel@agiColorModelRGB888_Rev@@UAEIPAVagiSurfaceDesc@@HH@Z:PROC
 EXTERN ?GetPixel@agiColorModelRGBA4444@@UAEIPAVagiSurfaceDesc@@HH@Z:PROC
 EXTERN ?GetPixel@agiColorModelRGBA5551@@UAEIPAVagiSurfaceDesc@@HH@Z:PROC
+EXTERN ?GetPlayerData@asNetwork@@QAEHKPAXH@Z:PROC
 EXTERN ?GetPos@mmMatrixInstance@@UAIAAVVector3@@XZ:PROC
 EXTERN ?GetPos@mmUnhitBangerInstance@@UAIAAVVector3@@XZ:PROC
 EXTERN ?GetPosition@CDMan@@QAEKPAE000@Z:PROC
@@ -509541,6 +509292,7 @@ EXTERN ?SetInterest@mmArrow@@QAEXPAVVector3@@@Z:PROC
 EXTERN ?SetMass@asInertialCS@@QAEXMMMM@Z:PROC
 EXTERN ?SetName@asNode@@QAEXPBD@Z:PROC
 EXTERN ?SetPixel@agiColorModel8@@UAEXPAVagiSurfaceDesc@@HHI@Z:PROC
+EXTERN ?SetPlayerData@asNetwork@@QAEXKPAXH@Z:PROC
 EXTERN ?SetPosition@uiWidget@@UAEXMM@Z:PROC
 EXTERN ?SetRenderer@GraphicsOptions@@QAEXXZ:PROC
 EXTERN ?SetResetPos@mmCarSim@@QAEXAAVVector3@@@Z:PROC

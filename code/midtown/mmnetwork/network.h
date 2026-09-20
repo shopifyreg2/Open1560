@@ -96,7 +96,7 @@ public:
     ARTS_IMPORT char* GetEnumPlayer(i32 arg1);
 
     // ?GetEnumPlayerData@asNetwork@@QAEHHPAXH@Z
-    ARTS_IMPORT i32 GetEnumPlayerData(i32 arg1, void* arg2, i32 arg3);
+    ARTS_EXPORT i32 GetEnumPlayerData(i32 arg1, void* arg2, i32 arg3);
 
     // ?GetEnumSession@asNetwork@@QAEPADH@Z
     ARTS_IMPORT char* GetEnumSession(i32 arg1);
@@ -120,7 +120,7 @@ public:
     ARTS_IMPORT i32 GetNumSessions();
 
     // ?GetPlayerData@asNetwork@@QAEHKPAXH@Z
-    ARTS_IMPORT i32 GetPlayerData(ulong arg1, void* arg2, i32 arg3);
+    ARTS_EXPORT i32 GetPlayerData(ulong arg1, void* arg2, i32 arg3);
 
     // ?GetPlayerID@asNetwork@@QAEKH@Z
     ARTS_IMPORT ulong GetPlayerID(i32 arg1);
@@ -186,7 +186,7 @@ public:
     ARTS_IMPORT void SetEnumSessionLock(i32 arg1, i32 arg2);
 
     // ?SetPlayerData@asNetwork@@QAEXKPAXH@Z
-    ARTS_IMPORT void SetPlayerData(ulong arg1, void* arg2, i32 arg3);
+    ARTS_EXPORT void SetPlayerData(ulong arg1, void* arg2, i32 arg3);
 
     // ?SetProtocol@asNetwork@@QAEHH@Z
     ARTS_IMPORT i32 SetProtocol(i32 arg1);
