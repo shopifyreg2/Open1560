@@ -45,8 +45,12 @@ jobs:
         if-no-files-found: error
 
     - name: Update Release
-      if: github.repository_owner == 'shopifyreg2' && github.ref == 'refs/heads/master'
+      shell: pwsh
       run: |
-        7z a -tzip "artifacts/Open1560.zip" "${{github.workspace}}/build/output/*"
-        gh release upload "build" "artifacts/Open1560.zip" --clobber
-        git push --force origin HEAD:refs/tags/build
+        $stamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd_HH-mm-ss")
+        7z a -tzip "artifacts/Open1560-$stamp.zip" "${{github.workspace}}/build/output/*"
+        gh release create "build-$stamp" "artifacts/Open1560-$stamp.zip" `
+          --repo "${{github.repository}}" `
+          --target "${{github.sha}}" `
+          --title "Open1560 build $stamp" `
+          --notes "Built from commit ${{github.sha}}"
