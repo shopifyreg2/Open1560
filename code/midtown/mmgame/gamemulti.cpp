@@ -25,10 +25,10 @@ define_dummy_symbol(mmgame_gamemulti);
 #include "mmnetwork/network.h"
 
 // ?GameMultiTickRate@@3MA
-ARTS_EXPORT f32 GameMultiTickRate = (1.0f / 20.0f);
+ARTS_EXPORT f32 GameMultiTickRate = (1.0f / 1000.0f);
 
 void mmGameMulti::NextRace()
-{}
+{ }
 
 void mmGameMulti::QuitNetwork()
 {
@@ -45,7 +45,7 @@ void mmGameMulti::QuitNetwork()
 }
 
 void mmGameMulti::UpdateDebugKeyInput(i32 /*arg1*/)
-{}
+{ }
 
 void mmGameMulti::ActivateMapNetObject(i32 player)
 {
