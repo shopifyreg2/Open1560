@@ -25,7 +25,7 @@ define_dummy_symbol(mmcar_car);
 #include "arts7/sim.h"
 #include "data7/timer.h"
 #include "mmcity/cullcity.h"
-#include "mmcityinfo/state.h" F
+#include "mmcityinfo/state.h"
 #include "mmcityinfo/vehlist.h"
 #include "mminput/input.h"
 #include "mmphysics/joint3dof.h"
