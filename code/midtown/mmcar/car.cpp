@@ -25,15 +25,13 @@ define_dummy_symbol(mmcar_car);
 #include "arts7/sim.h"
 #include "data7/timer.h"
 #include "mmcity/cullcity.h"
-#include "mmcityinfo/state.h"
+#include "mmcityinfo/state.h" F
 #include "mmcityinfo/vehlist.h"
 #include "mminput/input.h"
 #include "mmphysics/joint3dof.h"
 
 #include "playercaraudio.h"
 #include "trailer.h"
-
-static mem::cmd_param PARAM_aiphysics {"aiphysics"};
 
 // ?ffval@@3MA
 ARTS_EXPORT f32 ffval = 0.0f;
@@ -84,8 +82,7 @@ void mmCar::Update()
 
     OverSample.Update();
 
-    if (PARAM_aiphysics)
-        ApplyAiPhysics();
+    ApplyAiPhysics();
 
 #ifdef ARTS_DEV_BUILD
     f32 elapsed = t.Time();

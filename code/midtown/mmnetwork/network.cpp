@@ -22,8 +22,6 @@ define_dummy_symbol(mmnetwork_network);
 
 static GUID MM_GUID {0x6C9983A7, 0xC037, 0x11D2, {0xA8, 0xDA, 0x00, 0xA0, 0xC9, 0x70, 0xAF, 0x5D}};
 
-static mem::cmd_param PARAM_dplay {"dplay"};
-
 static HRESULT(WINAPI* Orig_DirectPlayCreate)(LPGUID lpGUID, LPDIRECTPLAY* lplpDP, IUnknown* pUnk);
 
 // ?netDirectPlayCreate@@YGJPAU_GUID@@PAPAUIDirectPlay@@PAUIUnknown@@@Z
@@ -34,12 +32,6 @@ ARTS_EXPORT HRESULT WINAPI netDirectPlayCreate(LPGUID lpGUID, LPDIRECTPLAY* lplp
 
 static bool LoadDirectPlay()
 {
-    if (!PARAM_dplay.get_or(false))
-    {
-        Displayf("DirectPlay disabled. Use `-dplay` cmd argument to enable multiplayer");
-        return false;
-    }
-
     if (!Orig_DirectPlayCreate)
     {
         HMODULE hdplayx = LoadLibraryA("DPLAYX.DLL");
