@@ -28,7 +28,9 @@ define_dummy_symbol(mmgame_gamemulti);
 ARTS_EXPORT f32 GameMultiTickRate = (1.0f / 1000.0f);
 
 void mmGameMulti::NextRace()
-{ }
+{
+    // adding a comment here for error checking
+}
 
 void mmGameMulti::QuitNetwork()
 {
@@ -45,7 +47,9 @@ void mmGameMulti::QuitNetwork()
 }
 
 void mmGameMulti::UpdateDebugKeyInput(i32 /*arg1*/)
-{ }
+{
+    // adding a comment here for error checking
+}
 
 void mmGameMulti::ActivateMapNetObject(i32 player)
 {
