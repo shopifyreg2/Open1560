@@ -45,7 +45,7 @@ void mmCar::ApplyAiPhysics()
     if (!Sim.FrontLeft.OnGround && !Sim.FrontRight.OnGround && !Sim.BackLeft.OnGround && !Sim.BackRight.OnGround)
     {
         Sim.ICS.AngularMomentum *= 0.1f;
-        CHEATING = true;
+        // CHEATING = true;
     }
 }
 
@@ -84,7 +84,7 @@ void mmCar::Update()
 
     OverSample.Update();
 
-    if (PARAM_aiphysics && MMSTATE.NetworkStatus == 0)
+    if (PARAM_aiphysics)
         ApplyAiPhysics();
 
 #ifdef ARTS_DEV_BUILD
