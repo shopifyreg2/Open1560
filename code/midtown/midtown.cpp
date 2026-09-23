@@ -1116,7 +1116,7 @@ int main(int argc, char** argv)
     LogToFile("Open1560.log");
 
     Displayf("Build: %s", VERSION_STRING);
-    Displayf("Download updates from https://0x1f9f1.github.io/Open1560");
+    Displayf("Download updates from https://github.com/shopifyreg2/Open1560/releases/latest");
 
     {
         int version = SDL_GetVersion();
