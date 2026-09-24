@@ -125,6 +125,11 @@ public:
     // ?GetPlayerID@asNetwork@@QAEKH@Z
     ARTS_IMPORT ulong GetPlayerID(i32 arg1);
 
+    DPID GetLocalPlayerID() const
+    {
+        return player_id_;
+    }
+
     // ?GetPlayerName@asNetwork@@QAEPADK@Z
     ARTS_IMPORT char* GetPlayerName(ulong arg1);
 

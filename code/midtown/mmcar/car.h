@@ -145,5 +145,7 @@ public:
 
 check_size(mmCar, 0x230C);
 
+void SendCarImpact(mmCar* car, mmIntersection* isect, Vector3* velocity, f32 energy, i32 audio_id);
+
 // ?EggNameIndex@@YAHPAD@Z
 ARTS_EXPORT i32 EggNameIndex(char* name);

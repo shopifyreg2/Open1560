@@ -54202,6 +54202,14 @@ loc_431408:
     retn 8
 
 loc_43143B:
+    cmp dword ptr [esi], 206h
+    jne loc_43143C
+    push esi
+    mov ecx, ebx
+    call ?HandleCarImpact@mmGameMulti@@QAEXPAUNETIMPACT_MSG@@@Z
+    jmp loc_431446
+
+loc_43143C:
     mov edx, dword ptr [ebx]
     push esi
     mov ecx, ebx
@@ -509004,6 +509012,7 @@ EXTERN ?GetWidgetID@UIMenu@@QAEHXZ:PROC
 EXTERN ?GlobalDamageScale@@3MA:BYTE
 EXTERN ?GraphicsChange@@3EA:BYTE
 EXTERN ?GraphicsPreviousMenu@@3EA:BYTE
+EXTERN ?HandleCarImpact@mmGameMulti@@QAEXPAUNETIMPACT_MSG@@@Z:PROC
 EXTERN ?HaveMMX@@3HA:BYTE
 EXTERN ?Highlight@mmCompBase@@UAEXPAVmmTextNode@@H@Z:PROC
 EXTERN ?Hit@mmMatrixInstance@@UAEXPAVmmInstance@@@Z:PROC

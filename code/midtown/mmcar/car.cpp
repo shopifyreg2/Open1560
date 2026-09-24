@@ -360,6 +360,8 @@ void mmCar::Impact(mmIntersection* isect, Vector3* velocity, f32 energy, i32 aud
             Model.Impact(&where);
         }
 
+        SendCarImpact(this, isect, velocity, energy, audio_id);
+
         Sim.PlayImpactAudio(static_cast<i16>(audio_id), isect, velocity);
     }
 }

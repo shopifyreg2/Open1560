@@ -33,6 +33,7 @@ enum NetgameMessageId
     PlayerUpdate = 501,
     Chat = 504,
     BootPlayer = 513,
+    CarImpact = 518,
 };
 
 struct NETGAME_MSG
@@ -52,6 +53,20 @@ struct NETGAME_MSG
     u32 LastUpdateIdx;
     char StringValue[4];
 };
+
+struct NETIMPACT_MSG
+{
+    i32 MessageId;
+    i32 SenderId;
+    Vector3 Position;
+    Vector3 Normal;
+    Vector3 Velocity;
+    f32 Energy;
+    i16 AudioId;
+    u16 Reserved;
+};
+
+check_size(NETIMPACT_MSG, 0x34);
 
 class mmNetObject final : public asNetObject
 {

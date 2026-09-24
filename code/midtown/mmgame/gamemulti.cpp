@@ -20,8 +20,10 @@ define_dummy_symbol(mmgame_gamemulti);
 
 #include "gamemulti.h"
 
+#include "arts7/sim.h"
 #include "mmcar/car.h"
 #include "mmcityinfo/state.h"
+#include "mmdyna/isect.h"
 #include "mmnetwork/network.h"
 
 // ?GameMultiTickRate@@3MA
@@ -43,6 +45,60 @@ void mmGameMulti::QuitNetwork()
         NETMGR.DestroyPlayer();
         NETMGR.CloseSession();
         NETMGR.Deallocate();
+    }
+}
+
+void mmGameMulti::HandleCarImpact(NETIMPACT_MSG* msg)
+{
+    if (!msg || msg->MessageId != CarImpact || !NETMGR.InSession())
+        return;
+
+    const DPID sender_id = static_cast<DPID>(msg->SenderId);
+    if (sender_id == 0 || sender_id == 0xFFFFFFFFu || sender_id == NETMGR.GetLocalPlayerID() ||
+        msg->AudioId != MM_IMPACT_AUDIO_9 || !std::isfinite(msg->Energy) || !std::isfinite(msg->Position.x) ||
+        !std::isfinite(msg->Position.y) || !std::isfinite(msg->Position.z) || !std::isfinite(msg->Normal.x) ||
+        !std::isfinite(msg->Normal.y) || !std::isfinite(msg->Normal.z) || !std::isfinite(msg->Velocity.x) ||
+        !std::isfinite(msg->Velocity.y) || !std::isfinite(msg->Velocity.z))
+    {
+        return;
+    }
+
+    mmIntersection impact {};
+    impact.Position = msg->Position;
+    impact.Normal = msg->Normal;
+
+    Vector3 velocity = msg->Velocity;
+
+    const f32 deflection = -((velocity ^ impact.Normal));
+    if (!std::isfinite(deflection))
+        return;
+
+    const f32 abs_deflection = std::abs(deflection);
+    const f32 spark_deflection = abs_deflection < 100.0f ? abs_deflection : 100.0f;
+    static f32 last_play_time[8] = {};
+
+    for (i32 i = 0; i < 8; ++i)
+    {
+        mmNetObject& object = NetObjects[i];
+        if (!object.IsEnabled || object.PlayerID != sender_id || !object.Car || !object.Car->Sim.NetworkCarAudio)
+        {
+            continue;
+        }
+
+        const f32 now = ::Sim()->GetElapsed();
+        if (last_play_time[i] > 0.0f && (now - last_play_time[i]) < 0.1f)
+            return;
+
+        last_play_time[i] = now;
+
+        if (spark_deflection > 0.25f && object.Car->Sim.Model)
+        {
+            object.Car->Sim.Model->Sparks.RadialBlast(
+                static_cast<i32>(spark_deflection * 0.5f), impact.Position, impact.Normal);
+        }
+
+        object.Car->Sim.PlayImpactAudio(msg->AudioId, &impact, &velocity);
+        return;
     }
 }
 

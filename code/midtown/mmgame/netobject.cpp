@@ -24,9 +24,39 @@ define_dummy_symbol(mmgame_netobject);
 #include "mmcar/car.h"
 #include "mmcar/trailer.h"
 #include "mmcityinfo/vehlist.h"
+#include "mmdyna/isect.h"
 #include "mmphysics/phys.h"
 
 #include "mmnetwork/network.h"
+
+void SendCarImpact(mmCar* car, mmIntersection* isect, Vector3* velocity, f32 energy, i32 audio_id)
+{
+    if (!car || !isect || !velocity || !NETMGR.InSession() || !car->Sim.IsPlayer() || audio_id != MM_IMPACT_AUDIO_9 ||
+        !std::isfinite(energy))
+    {
+        return;
+    }
+
+    const DPID sender_id = NETMGR.GetLocalPlayerID();
+    if (sender_id == 0)
+        return;
+
+    static f32 last_send_time = -1.0f;
+    const f32 now = ::Sim()->GetElapsed();
+    if (last_send_time >= 0.0f && (now - last_send_time) < 0.1f)
+        return;
+    last_send_time = now;
+
+    NETIMPACT_MSG msg {};
+    msg.MessageId = CarImpact;
+    msg.SenderId = static_cast<i32>(sender_id);
+    msg.Position = isect->Position;
+    msg.Normal = isect->Normal;
+    msg.Velocity = *velocity;
+    msg.Energy = energy;
+    msg.AudioId = static_cast<i16>(audio_id);
+    NETMGR.Send(0, &msg, sizeof(msg), 0);
+}
 
 // ?time_delta@@3MA
 static f32 time_delta = 0.0f;

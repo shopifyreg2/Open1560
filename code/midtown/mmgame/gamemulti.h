@@ -23,6 +23,7 @@
 #include "netobject.h"
 
 struct NETGAME_MSG;
+struct NETIMPACT_MSG;
 struct NETSYS_MSG;
 
 class mmGameMulti : public mmGame
@@ -66,6 +67,9 @@ public:
 
     // ?GameMessageCB@mmGameMulti@@QAEXPAX0@Z
     ARTS_IMPORT void GameMessageCB(void* arg1, void* arg2);
+
+    // ?HandleCarImpact@mmGameMulti@@QAEXPAUNETIMPACT_MSG@@@Z
+    ARTS_EXPORT void HandleCarImpact(NETIMPACT_MSG* msg);
 
     // ?GetClass@mmGameMulti@@UAEPAVMetaClass@@XZ
     ARTS_IMPORT MetaClass* GetClass() override;
