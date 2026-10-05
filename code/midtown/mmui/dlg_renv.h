@@ -36,15 +36,27 @@ public:
     ARTS_IMPORT void ControlPedSlider();
 
     // ?DoneCallback@Dialog_RaceEnvironment@@QAEXXZ
-    ARTS_IMPORT void DoneCallback();
+    ARTS_EXPORT void DoneCallback();
 
     // ?PreSetup@Dialog_RaceEnvironment@@UAEXXZ
     ARTS_IMPORT void PreSetup() override;
 
     // ?SetMultiRaceOptions@Dialog_RaceEnvironment@@QAEXH@Z
-    ARTS_IMPORT void SetMultiRaceOptions(i32 arg1);
+    ARTS_EXPORT void SetMultiRaceOptions(i32 arg1);
 
-    u8 gapC0[0x30];
+    u8 gapC0[0xC];
+
+    UISlider* AmbientDensitySlider; // 0xCC
+    UISlider* CopDensitySlider;     // 0xD0
+    UISlider* PedDensitySlider;     // 0xD4
+
+    i32 TimeOfDayField;    // 0xD8, mmTimeOfDay + 1
+    i32 WeatherField;      // 0xDC, mmWeather + 1
+    i32 EnablePagingField; // 0xE0
+
+    f32 CopDensity;     // 0xE4
+    f32 PedDensity;     // 0xE8
+    f32 AmbientDensity; // 0xEC
 };
 
 check_size(Dialog_RaceEnvironment, 0xF0);

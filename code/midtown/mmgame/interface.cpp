@@ -35,6 +35,7 @@ define_dummy_symbol(mmgame_interface);
 #include "mmcityinfo/state.h"
 #include "mmcityinfo/vehlist.h"
 #include "mmnetwork/network.h"
+#include "mmui/cr_settings.h"
 #include "mmwidget/manager.h"
 #include "mmwidget/menu.h"
 
@@ -88,6 +89,86 @@ mmInterface::~mmInterface()
 
 void mmInterface::SetStateRace(i32 /*arg1*/)
 {}
+
+namespace
+{
+    // The densities are transferred as a single byte each, exactly like the original game
+    // does for MMSTATE::PedDensity. Note that this loses precision for values outside [0, 1].
+    u8 PackDensity(f32 density)
+    {
+        return static_cast<u8>(density * 255.0f);
+    }
+
+    f32 UnpackDensity(u32 density)
+    {
+        return static_cast<f32>(density & 0xFF) / 255.0f;
+    }
+} // namespace
+
+void mmInterface::SetSessionData(NETSESSION_DESC* arg1)
+{
+    arg1->GameVersion = 10;
+
+    arg1->dword4 = (static_cast<i32>(MMSTATE.GameMode) << 12) | (MMSTATE.EventId << 8) |
+        (static_cast<i32>(MMSTATE.Weather) << 4) | static_cast<i32>(MMSTATE.TimeOfDay);
+
+    const i32 race_flags = static_cast<i32>(MMSTATE.Difficulty) << 2 | MMSTATE.DisableDamage;
+
+    if (MMSTATE.GameMode == mmGameMode::CnR)
+    {
+        // Only the low byte of the encoded data is ever read back.
+        arg1->dword8 = race_flags | (MenuCRSettings->EncodeCRData() & 0xFF) << 8;
+    }
+    else
+    {
+        arg1->dword8 = race_flags | MMSTATE.NumLaps << 4 | static_cast<i32>(MMSTATE.TimeLimit) << 8;
+    }
+
+    arg1->dwordC = PackDensity(MMSTATE.PedDensity) | PackDensity(MMSTATE.AmbientDensity) << 8 |
+        PackDensity(MMSTATE.CopDensity) << 16;
+
+    // mmGameMulti::Init clears both densities before it calls mmGame::Init, so keep a copy of
+    // what the host wants here. Not every way of starting a multiplayer race comes back through
+    // GetSessionData, so this cannot rely on reading the description back.
+    MMSTATE.HostAmbientDensity = MMSTATE.AmbientDensity;
+    MMSTATE.HostCopDensity = MMSTATE.CopDensity;
+}
+
+void mmInterface::GetSessionData(NETSESSION_DESC arg1)
+{
+    MMSTATE.GameMode = static_cast<mmGameMode>(arg1.dword4 >> 12 & 0xF);
+    MMSTATE.Weather = static_cast<mmWeather>(arg1.dword4 >> 4 & 0xF);
+    MMSTATE.TimeOfDay = static_cast<mmTimeOfDay>(arg1.dword4 & 0xF);
+    MMSTATE.EventId = arg1.dword4 >> 8 & 0xF;
+
+    MMSTATE.PedDensity = UnpackDensity(arg1.dwordC);
+
+    // Hosts which do not know about these densities leave both bytes zero.
+    // Keep our own values in that case instead of ending up with no traffic and no cops.
+    if (arg1.dwordC & 0xFFFF0000)
+    {
+        MMSTATE.AmbientDensity = UnpackDensity(arg1.dwordC >> 8);
+        MMSTATE.CopDensity = UnpackDensity(arg1.dwordC >> 16);
+
+        // mmGameMulti::Init clears both before it calls mmGame::Init, so keep our own copy too.
+        MMSTATE.HostAmbientDensity = MMSTATE.AmbientDensity;
+        MMSTATE.HostCopDensity = MMSTATE.CopDensity;
+    }
+
+    if (MMSTATE.GameMode == mmGameMode::CnR)
+    {
+        MenuCRSettings->DecodeCRData(arg1.dword8 >> 8 & 0xFF);
+        SetCRStateData();
+    }
+    else
+    {
+        MMSTATE.NumLaps = arg1.dword8 >> 4 & 0xF;
+        MMSTATE.TimeLimit = static_cast<f32>(arg1.dword8 >> 8 & 0xFF);
+    }
+
+    MMSTATE.Difficulty = static_cast<mmSkillLevel>(arg1.dword8 >> 2 & 3);
+    MMSTATE.DisableDamage = arg1.dword8 & 1;
+}
 
 void ReportTimeAlloc(f32 time)
 {

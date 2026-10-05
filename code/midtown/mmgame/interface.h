@@ -206,7 +206,7 @@ private:
     ARTS_IMPORT void GetScoreString(i32 arg1, char* arg2);
 
     // ?GetSessionData@mmInterface@@AAEXUNETSESSION_DESC@@@Z
-    ARTS_IMPORT void GetSessionData(NETSESSION_DESC arg1);
+    ARTS_EXPORT void GetSessionData(NETSESSION_DESC arg1);
 
     // ?GetTimeString@mmInterface@@AAEXMPAD@Z
     ARTS_IMPORT void GetTimeString(f32 arg1, char* arg2);
@@ -329,7 +329,7 @@ private:
     ARTS_IMPORT i32 SetProtocol2();
 
     // ?SetSessionData@mmInterface@@AAEXPAUNETSESSION_DESC@@@Z
-    ARTS_IMPORT void SetSessionData(NETSESSION_DESC* arg1);
+    ARTS_EXPORT void SetSessionData(NETSESSION_DESC* arg1);
 
     // ?SetStateDefaults@mmInterface@@AAEXXZ | unused
     void SetStateDefaults();

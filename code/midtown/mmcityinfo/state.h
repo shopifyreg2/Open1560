@@ -113,8 +113,11 @@ struct mmStatePack
     i32 EventId;
     f32 RaceDifficulty;
     b32 AutoTransmission;
-    i32 field_3C;
-    i32 field_40;
+    // Unused by the original game. mmGameMulti::Init clears AmbientDensity and CopDensity before it
+    // calls mmGame::Init, because a multiplayer race never has ambient traffic or cops. The values
+    // the host wants are kept here and put back by mmGame::Init before the AI map is built.
+    f32 HostAmbientDensity;
+    f32 HostCopDensity;
     i32 field_44;
     f32 AmbientDensity;
     f32 PedDensity;

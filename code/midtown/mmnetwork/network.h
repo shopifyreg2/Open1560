@@ -24,7 +24,7 @@
 
 struct NETSESSION_DESC
 {
-    i32 GameVersion; // = 5
+    i32 GameVersion; // = 10
 
     // TimeOfDay: 4
     // Weather: 4
@@ -47,6 +47,12 @@ struct NETSESSION_DESC
     i32 dword8;
 
     // PedDensity: 8
+    // AmbientDensity: 8
+    // CopDensity: 8
+    //
+    // Only the low byte is read by the original game, so hosts and clients built from
+    // 1560.ar ignore the ambient and cop densities. A host which does not send them
+    // (i.e. any unmodified game) leaves both bytes zero, which is treated as "not sent".
     i32 dwordC;
 };
 

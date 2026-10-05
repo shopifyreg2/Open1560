@@ -629,6 +629,15 @@ static mem::cmd_param PARAM_deadends {"deadends", "Allow traffic to travel to de
 
 b32 mmGame::Init()
 {
+    // The original game never runs ambient traffic or cops in multiplayer, so mmGameMulti::Init
+    // clears both densities before calling us. Put back what the host asked for, otherwise the AI
+    // map below would be built without any traffic and without any police.
+    if (MMSTATE.NetworkStatus)
+    {
+        MMSTATE.AmbientDensity = MMSTATE.HostAmbientDensity;
+        MMSTATE.CopDensity = MMSTATE.HostCopDensity;
+    }
+
     ResetPositions = arnew mmPositions();
     ResetPositions->Init(100);
 
@@ -773,13 +782,40 @@ b32 mmGame::Init()
         char aimap_file[128];
         HasAIMap = false;
 
-        if (EnableAI && !MMSTATE.DisableAI &&
+        // mmGame::EnableAI is cleared by mmMultiRace/mmMultiBlitz/mmMultiCircuit::Init for every
+        // multiplayer mode except Cruise, which is why the original game has no ambient traffic or
+        // cops during a multiplayer race. Nothing in the original code reads the flag; it is only
+        // written by those three constructors. Ignore it so the AI map gets built and traffic and
+        // cops appear in multiplayer too. The -noai cheat still disables AI.
+        if (!MMSTATE.DisableAI &&
             (FindFile(MapName, city_folder, ".map", 0, aimap_file, ARTS_SIZE(aimap_file)) ||
                 FindFile(MapName, city_folder, ".bai", 0, aimap_file, ARTS_SIZE(aimap_file))))
         {
             // aiTrafficLightSet::ObjCount = 0;
 
+            // In multiplayer the other racers are network objects, so AI opponents would be extra
+            // cars that nobody else can see. aiMap::NumOpponents is derived from MaxOpponents in
+            // aiMap::Init, so zero it while the map is built to skip that allocation.
+            const f32 max_opponents = MMSTATE.MaxOpponents;
+            const i32 network_status = MMSTATE.NetworkStatus;
+
+            if (MMSTATE.NetworkStatus)
+            {
+                MMSTATE.MaxOpponents = 0;
+
+                // Every AI car built here sets up its engine audio through NetAudioManager while
+                // MMSTATE.NetworkStatus is set, but NETAUDMGRPTR is not created until
+                // mmGameMulti::InitOtherPlayers runs after this returns. EngineAudioOpponent::Init
+                // dereferences it unguarded, so constructing any car here crashes. Pretend to be
+                // single player for the duration: aiMap::Init then creates the aiAudioManager that
+                // the single player audio path uses, and it has no such ordering problem.
+                MMSTATE.NetworkStatus = 0;
+            }
+
             AIMAP.Init(RaceDir, aimap_file, city_folder, &Player->Car);
+
+            MMSTATE.MaxOpponents = max_opponents;
+            MMSTATE.NetworkStatus = network_status;
             HasAIMap = true;
 
             // TODO: Handle more than 8 opponents
@@ -812,7 +848,23 @@ b32 mmGame::Init()
     if (!MMSTATE.DisableAI)
     {
         AnimMgr = arnew mmAnimMgr();
+
+        // mmBridgeMgr::Init only builds the trigger of a bridge while playing a single player race.
+        // In every other situation it sets InitialPos and UpInterval such that the bridge is pinned
+        // down forever, so the drawbridges would never raise outside of single player races.
+        // Let the bridge setup run as if we were in a single player race so the bridges move here too.
+        // mmBridgeSet::Init picks this up as well and flags the bridge roads on the AI map.
+        const i32 network_status = MMSTATE.NetworkStatus;
+        const mmGameMode game_mode = MMSTATE.GameMode;
+
+        MMSTATE.NetworkStatus = 0;
+        MMSTATE.GameMode = mmGameMode::Checkpoint;
+
         AnimMgr->Init(MapName, Player->Car.Sim.Model, nullptr, 0);
+
+        MMSTATE.NetworkStatus = network_status;
+        MMSTATE.GameMode = game_mode;
+
         AddChild(AnimMgr.get());
     }
 

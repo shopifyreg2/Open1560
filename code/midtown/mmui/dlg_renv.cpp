@@ -13,12 +13,39 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 define_dummy_symbol(mmui_dlg_renv);
 
 #include "dlg_renv.h"
 
-void Dialog_RaceEnvironment::CancelCallback()
-{}
+#include "mmcityinfo/state.h"
+#include "mmwidget/slider.h"
+
+void Dialog_RaceEnvironment::DoneCallback()
+{
+    MMSTATE.Weather = static_cast<mmWeather>(WeatherField - 1);
+    MMSTATE.TimeOfDay = static_cast<mmTimeOfDay>(TimeOfDayField - 1);
+    MMSTATE.CopDensity = CopDensity;
+    MMSTATE.PedDensity = PedDensity;
+    MMSTATE.AmbientDensity = AmbientDensity;
+    MMSTATE.EnablePaging = EnablePagingField;
+
+    // mmGameMulti::Init clears the ambient and cop densities before it calls mmGame::Init, so
+    // remember what the host just picked. Not every way of starting a multiplayer race reads
+    // the session description back, so the menu is the only place that always sees the change.
+    MMSTATE.HostAmbientDensity = AmbientDensity;
+    MMSTATE.HostCopDensity = CopDensity;
+}
+
+void Dialog_RaceEnvironment::SetMultiRaceOptions(i32 /*arg1*/)
+{
+    // Note that the argument is inverted in the original game: a non-zero value greys the sliders
+    // out. The host race menu and the lobby always pass a non-zero value, which is why the
+    // traffic and police density could not be changed in multiplayer. Both are part of the
+    // session description now, so keep them editable everywhere. The single player menu passes
+    // zero, so nothing changes there.
+    AmbientDensitySlider->Enable();
+    CopDensitySlider->Enable();
+}

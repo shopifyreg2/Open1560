@@ -42,6 +42,8 @@ void mmStatePack::SetDefaults()
     AmbientDensity = 0.33f;
     PedDensity = 1.0f;
     CopDensity = 1.0f;
+    HostAmbientDensity = AmbientDensity;
+    HostCopDensity = CopDensity;
     MaxOpponents = 7.0f;
     PhysicsRealism = 0.75f;
     EnableFF = true;

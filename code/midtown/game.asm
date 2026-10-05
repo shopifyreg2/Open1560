@@ -13085,74 +13085,6 @@ loc_40DB4A:
 ?RefreshPlayers@mmInterface@@AAEXXZ ENDP
 
 ALIGN 16
-?GetSessionData@mmInterface@@AAEXUNETSESSION_DESC@@@Z PROC PUBLIC
-    push ebp
-    mov ebp, esp
-    push ecx
-    mov eax, dword ptr [ebp+0Ch]
-    push ebx
-    mov edx, eax
-    push esi
-    and edx, 0Fh
-    mov esi, ecx
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+68h], edx
-    mov ecx, eax
-    mov edx, eax
-    sar eax, 8
-    and eax, 0Fh
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+30h], eax
-    mov eax, dword ptr [ebp+14h]
-    and eax, 0FFh
-    mov dword ptr [ebp-4], eax
-    fild dword ptr [ebp-4]
-    sar ecx, 0Ch
-    sar edx, 4
-    fmul dword ptr [flt_61A2BC]
-    and ecx, 0Fh
-    and edx, 0Fh
-    cmp ecx, 2
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+2Ch], ecx
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+64h], edx
-    fstp dword ptr [?MMSTATE@@3UmmStatePack@@A+4Ch]
-    jnz loc_40DBF5
-    mov ebx, dword ptr [ebp+10h]
-    xor ecx, ecx
-    mov cl, bh
-    push ecx
-    mov ecx, dword ptr [esi+58h]
-    call ?DecodeCRData@CRSettings@@QAEXH@Z
-    mov ecx, esi
-    call ?SetCRStateData@mmInterface@@AAEXXZ
-    jmp loc_40DC1C
-
-loc_40DBF5:
-    mov ebx, dword ptr [ebp+10h]
-    mov edx, ebx
-    mov eax, ebx
-    sar edx, 8
-    and edx, 0FFh
-    mov dword ptr [ebp+14h], edx
-    fild dword ptr [ebp+14h]
-    sar eax, 4
-    and eax, 0Fh
-    fstp dword ptr [?MMSTATE@@3UmmStatePack@@A+110h]
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+128h], eax
-
-loc_40DC1C:
-    mov ecx, ebx
-    pop esi
-    sar ebx, 2
-    and ecx, 1
-    and ebx, 3
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+12Ch], ebx
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+118h], ecx
-    pop ebx
-    mov esp, ebp
-    pop ebp
-    retn 10h
-?GetSessionData@mmInterface@@AAEXUNETSESSION_DESC@@@Z ENDP
-
-ALIGN 16
 ?CreateSession@mmInterface@@AAEHXZ PROC PUBLIC
     push ebp
     mov ebp, esp
@@ -13307,67 +13239,6 @@ sym_40DDAC dd offset loc_40DC67
     dd offset loc_40DC7F
     dd offset loc_40DC87
 ?CreateSession@mmInterface@@AAEHXZ ENDP
-
-ALIGN 16
-?SetSessionData@mmInterface@@AAEXPAUNETSESSION_DESC@@@Z PROC PUBLIC
-    push ebp
-    mov ebp, esp
-    push ebx
-    push esi
-    mov esi, dword ptr [ebp+8]
-    push edi
-    mov ebx, ecx
-    mov dword ptr [esi], 0Ah
-    mov eax, dword ptr [?MMSTATE@@3UmmStatePack@@A+2Ch]
-    mov edi, dword ptr [?MMSTATE@@3UmmStatePack@@A+30h]
-    mov ecx, dword ptr [?MMSTATE@@3UmmStatePack@@A+64h]
-    shl eax, 4
-    mov edx, dword ptr [?MMSTATE@@3UmmStatePack@@A+68h]
-    or eax, edi
-    shl eax, 4
-    or eax, ecx
-    mov ecx, ebx
-    shl eax, 4
-    or eax, edx
-    mov dword ptr [esi+4], eax
-    call ?SetCRStateData@mmInterface@@AAEXXZ
-    mov ecx, dword ptr [?MMSTATE@@3UmmStatePack@@A+12Ch]
-    lea edi, [ecx*4]
-    mov ecx, dword ptr [?MMSTATE@@3UmmStatePack@@A+118h]
-    or edi, ecx
-    mov dword ptr [esi+8], edi
-    mov eax, dword ptr [?MMSTATE@@3UmmStatePack@@A+2Ch]
-    cmp eax, 2
-    jnz loc_40DE38
-    mov ecx, dword ptr [ebx+58h]
-    call ?EncodeCRData@CRSettings@@QAEHXZ
-    mov ecx, dword ptr [esi+8]
-    shl eax, 8
-    or ecx, eax
-    mov dword ptr [esi+8], ecx
-    jmp loc_40DE56
-
-loc_40DE38:
-    fld dword ptr [?MMSTATE@@3UmmStatePack@@A+110h]
-    call __ftol
-    mov ebx, dword ptr [?MMSTATE@@3UmmStatePack@@A+128h]
-    shl eax, 4
-    or eax, ebx
-    shl eax, 4
-    or eax, edi
-    mov dword ptr [esi+8], eax
-
-loc_40DE56:
-    fld dword ptr [?MMSTATE@@3UmmStatePack@@A+4Ch]
-    fmul dword ptr [flt_61A2C0]
-    call __ftol
-    mov dword ptr [esi+0Ch], eax
-    pop edi
-    pop esi
-    pop ebx
-    pop ebp
-    retn 4
-?SetSessionData@mmInterface@@AAEXPAUNETSESSION_DESC@@@Z ENDP
 
 ALIGN 16
 ?SetCRStateData@mmInterface@@AAEXXZ PROC PUBLIC
@@ -196465,54 +196336,6 @@ loc_49E305:
     mov edx, dword ptr [ecx]
     jmp dword ptr [edx+40h]
 ?ControlPedSlider@Dialog_RaceEnvironment@@QAEXXZ ENDP
-
-ALIGN 16
-?SetMultiRaceOptions@Dialog_RaceEnvironment@@QAEXH@Z PROC PUBLIC
-    push ebp
-    mov ebp, esp
-    mov eax, dword ptr [ebp+8]
-    push esi
-    mov esi, ecx
-    test eax, eax
-    mov ecx, dword ptr [esi+0CCh]
-    mov eax, dword ptr [ecx]
-    jz loc_49E338
-    call dword ptr [eax+3Ch]
-    mov ecx, dword ptr [esi+0D0h]
-    mov edx, dword ptr [ecx]
-    call dword ptr [edx+3Ch]
-    pop esi
-    pop ebp
-    retn 4
-
-loc_49E338:
-    call dword ptr [eax+40h]
-    mov ecx, dword ptr [esi+0D0h]
-    mov edx, dword ptr [ecx]
-    call dword ptr [edx+40h]
-    pop esi
-    pop ebp
-    retn 4
-?SetMultiRaceOptions@Dialog_RaceEnvironment@@QAEXH@Z ENDP
-
-ALIGN 16
-?DoneCallback@Dialog_RaceEnvironment@@QAEXXZ PROC PUBLIC
-    mov eax, dword ptr [ecx+0DCh]
-    dec eax
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+64h], eax
-    mov edx, dword ptr [ecx+0D8h]
-    dec edx
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+68h], edx
-    mov eax, dword ptr [ecx+0E4h]
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+50h], eax
-    mov edx, dword ptr [ecx+0E8h]
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+4Ch], edx
-    mov eax, dword ptr [ecx+0ECh]
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+48h], eax
-    mov ecx, dword ptr [ecx+0E0h]
-    mov dword ptr [?MMSTATE@@3UmmStatePack@@A+2ECh], ecx
-    retn
-?DoneCallback@Dialog_RaceEnvironment@@QAEXXZ ENDP
 
 ALIGN 16
 ??_GDialog_RaceEnvironment@@UAEPAXI@Z PROC PRIVATE
@@ -458300,12 +458123,6 @@ ALIGN 4
 flt_61A2B8 dd 040400000r
 
 ALIGN 4
-flt_61A2BC dd 03B808081r
-
-ALIGN 4
-flt_61A2C0 dd 0437F0000r
-
-ALIGN 4
 ??_7mmInterface@@6B@ dd offset ??_EmmInterface@@UAEPAXI@Z
     dd offset ?GetClass@mmInterface@@UAEPAVMetaClass@@XZ
     dd offset ?GetTypeNameV@Base@@UAEPBDXZ
@@ -508863,6 +508680,7 @@ EXTERN ?DisableSessions@NetSelectMenu@@QAEXXZ:PROC
 EXTERN ?Disconnect@asNetwork@@QAEXXZ:PROC
 EXTERN ?Displayf@@YAXPBDZZ:PROC
 EXTERN ?DoneAction@ControlSetup@@UAEXXZ:PROC
+EXTERN ?DoneCallback@Dialog_RaceEnvironment@@QAEXXZ:PROC
 EXTERN ?Dot3x3@Vector3@@QAIXABV1@ABVMatrix34@@@Z:PROC
 EXTERN ?Dot@Matrix44@@QAEXABV1@0@Z:PROC
 EXTERN ?Dot@Vector3@@QAIXABV1@ABVMatrix34@@@Z:PROC
@@ -508996,6 +508814,7 @@ EXTERN ?GetProductIdString@@YAXPADH@Z:PROC
 EXTERN ?GetResidentMeshSet@mmInstance@@QAEPAVagiMeshSet@@HHH@Z:PROC
 EXTERN ?GetScale@MenuManager@@QAEXAAM000@Z:PROC
 EXTERN ?GetScale@mmInstance@@UAIMXZ:PROC
+EXTERN ?GetSessionData@mmInterface@@AAEXUNETSESSION_DESC@@@Z:PROC
 EXTERN ?GetTextDimensions@mmTextNode@@QAEXPAXPAULocString@@AAM2@Z:PROC
 EXTERN ?GetTexture@agiPipeline@@QAEPAVagiTexDef@@HH@Z:PROC
 EXTERN ?GetTime@mmTimer@@QAEMXZ:PROC
@@ -509299,6 +509118,7 @@ EXTERN ?SetHightlight@UICompositeScroll@@QAEXXZ:PROC
 EXTERN ?SetIOPath@mmInfoBase@@QAEXPBD@Z:PROC
 EXTERN ?SetInterest@mmArrow@@QAEXPAVVector3@@@Z:PROC
 EXTERN ?SetMass@asInertialCS@@QAEXMMMM@Z:PROC
+EXTERN ?SetMultiRaceOptions@Dialog_RaceEnvironment@@QAEXH@Z:PROC
 EXTERN ?SetName@asNode@@QAEXPBD@Z:PROC
 EXTERN ?SetPixel@agiColorModel8@@UAEXPAVagiSurfaceDesc@@HHI@Z:PROC
 EXTERN ?SetPlayerData@asNetwork@@QAEXKPAXH@Z:PROC
@@ -509307,6 +509127,7 @@ EXTERN ?SetRenderer@GraphicsOptions@@QAEXXZ:PROC
 EXTERN ?SetResetPos@mmCarSim@@QAEXAAVVector3@@@Z:PROC
 EXTERN ?SetST@BaseCamCS@@UAEXPAM@Z:PROC
 EXTERN ?SetSessionData@asNetwork@@QAEXPAUNETSESSION_DESC@@PAD@Z:PROC
+EXTERN ?SetSessionData@mmInterface@@AAEXPAUNETSESSION_DESC@@@Z:PROC
 EXTERN ?SetSoundPtrs@mmBridgeSet@@QAEXPAVAudSound@@0@Z:PROC
 EXTERN ?SetString@mmNumber@@QAEXPAD@Z:PROC
 EXTERN ?SetString@mmTextNode@@QAEXHPAULocString@@@Z:PROC
